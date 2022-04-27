@@ -36,7 +36,7 @@ export default {
   mounted() {
     axios.get("/api/book/" + this.id).then(res => {
       this.item = res.data;
-    });
+    }).catch((err) => { this.$toasted.error(err.response.data.message, {duration: 5000}); });
   },
   methods: {
     update() {
@@ -46,9 +46,8 @@ export default {
             title: this.item.title,
             isbn: this.item.isbn,
             author: this.item.author,
-          }).then(() => {
-            router.push("/")
-      });
+          }).then(() => { router.push("/")  })
+          .catch((err) => { this.$toasted.error(err.response.data.message, {duration: 5000}); });
     }
   }
 }

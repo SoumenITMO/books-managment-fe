@@ -8,8 +8,8 @@
         @change="dataFileUpload"
     />
     <div v-for="item in items" :key="item.fileName">
-      <h2> {{ item.fileName }} <button v-on:click="downloadDataFile(item.fileName)"> Download </button></h2>
-      <table class="table">
+      <h2 v-if="item.books.length > 0"> {{ item.fileName }} <button v-on:click="downloadDataFile(item.fileName)"> Download </button></h2>
+      <table class="table" v-if="item.books.length > 0">
         <thead>
         <tr>
           <th scope="col">#</th>
@@ -52,17 +52,18 @@ export default {
       this.items = [];
       axios.get("/api/book/all").then(res => {
         this.items.push.apply(this.items, res.data);
-      });
+      }).catch((err) => { this.$toasted.error(err.response.data.message, {duration: 5000}); });
     },
     downloadDataFile(filename) {
-      axios.get("/book/data/download/" + filename, { responseType: 'blob' }).then((response) => {
+      let downloadFileName = filename === null ? Math.random().toString(36).slice(2) + ".xml" : filename;
+      axios.get("/book/data/download/" + downloadFileName, { responseType: 'blob' }).then((response) => {
         var rawFileData = window.URL.createObjectURL(new Blob([response.data]));
         var documentLinkElement = document.createElement('a');
         documentLinkElement.href = rawFileData;
-        documentLinkElement.setAttribute('download', filename);
+        documentLinkElement.setAttribute('download', downloadFileName);
         document.body.appendChild(documentLinkElement);
         documentLinkElement.click();
-      });
+      }).catch((err) => { this.$toasted.error(err.response.data.message, {duration: 5000}); });
     },
     editBook(bookId) {
       router.push({ path: 'edit/' + bookId })
@@ -70,7 +71,7 @@ export default {
     deleteBook(bookId) {
       axios.delete("/api/book/" + bookId).then(() => {
         this.fetchBooks();
-      });
+      }).catch((err) => { this.$toasted.error(err.response.data.message, {duration: 5000}); });
     },
     dataFileUpload() {
       this.file = this.$refs.file.files[0];
