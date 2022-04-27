@@ -1,20 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomePage from '../components/Home.vue'
-import EditBook from '../components/EditBook'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'homepage',
     component: HomePage
   },
   {
-    path: '/edit/:bookid',
-    name: 'about',
-    component: EditBook
+    path: '/edit/:id',
+    name: 'editbook',
+    component: () => import('../components/EditBook')
   }
 ]
 
