@@ -33,7 +33,7 @@ export default {
     addBook() {
       axios.post("/api/book/", this.item).then(() => {
         router.push({ path: "/" });
-      });
+      }).catch((err) => { this.$toasted.error(err.response.data.message, {duration: 5000}); });
     }
   }
 }
