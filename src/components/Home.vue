@@ -23,7 +23,7 @@
           <td>{{ book.title }}</td>
           <td>{{ book.author }}</td>
           <td>{{ book.isbn }}</td>
-          <td> <button> Delete </button> | <button> Edit </button> </td>
+          <td> <button v-on:click="deleteBook(book.id)"> Delete </button> | <button> Edit </button> </td>
         </tr>
         </tbody>
       </table>
@@ -58,6 +58,11 @@ export default {
         documentLinkElement.setAttribute('download', filename);
         document.body.appendChild(documentLinkElement);
         documentLinkElement.click();
+      });
+    },
+    deleteBook(bookId) {
+      axios.delete("/api/book/" + bookId).then(() => {
+        this.fetchBooks();
       });
     },
   }
