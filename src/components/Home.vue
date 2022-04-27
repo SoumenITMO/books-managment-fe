@@ -6,7 +6,7 @@
         name="file"
     />
     <div v-for="item in items" :key="item.fileName">
-      <h2> {{ item.fileName }} <button> Download </button></h2>
+      <h2> {{ item.fileName }} <button v-on:click="downloadDataFile(item.fileName)"> Download </button></h2>
       <table class="table">
         <thead>
         <tr>
@@ -49,7 +49,17 @@ export default {
       axios.get("/api/book/all").then(res => {
         this.items.push.apply(this.items, res.data);
       });
-    }
+    },
+    downloadDataFile(filename) {
+      axios.get("/book/data/download/" + filename, { responseType: 'blob' }).then((response) => {
+        var rawFileData = window.URL.createObjectURL(new Blob([response.data]));
+        var documentLinkElement = document.createElement('a');
+        documentLinkElement.href = rawFileData;
+        documentLinkElement.setAttribute('download', filename);
+        document.body.appendChild(documentLinkElement);
+        documentLinkElement.click();
+      });
+    },
   }
 }
 </script>
