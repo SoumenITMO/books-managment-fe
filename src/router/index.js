@@ -14,6 +14,11 @@ const routes = [
     path: '/edit/:id',
     name: 'editbook',
     component: () => import('../components/EditBook')
+  },
+  {
+    path: '/add',
+    name: 'addbook',
+    component: () => import('../components/AddBook')
   }
 ]
 

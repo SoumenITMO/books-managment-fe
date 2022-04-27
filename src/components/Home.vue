@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <router-link to="add"> Add Book </router-link>
     <input
         type="file"
         ref="file"
