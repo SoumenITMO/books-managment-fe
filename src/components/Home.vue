@@ -5,6 +5,7 @@
         type="file"
         ref="file"
         name="file"
+        @change="dataFileUpload"
     />
     <div v-for="item in items" :key="item.fileName">
       <h2> {{ item.fileName }} <button v-on:click="downloadDataFile(item.fileName)"> Download </button></h2>
@@ -71,6 +72,14 @@ export default {
         this.fetchBooks();
       });
     },
+    dataFileUpload() {
+      this.file = this.$refs.file.files[0];
+      let formData = new FormData();
+      formData.append("file", this.file);
+      let request = new XMLHttpRequest();
+      request.open("POST", "/uploadFile");
+      request.send(formData);
+    }
   }
 }
 </script>
