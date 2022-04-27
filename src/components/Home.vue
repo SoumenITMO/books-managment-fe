@@ -23,7 +23,7 @@
           <td>{{ book.title }}</td>
           <td>{{ book.author }}</td>
           <td>{{ book.isbn }}</td>
-          <td> <button v-on:click="deleteBook(book.id)"> Delete </button> | <button> Edit </button> </td>
+          <td> <button v-on:click="deleteBook(book.id)"> Delete </button> | <button v-on:click="editBook(book.id)"> Edit </button> </td>
         </tr>
         </tbody>
       </table>
@@ -33,6 +33,8 @@
 
 <script>
 import axios from 'axios';
+import router from "@/router";
+
 export default {
   name: 'HomePage',
   data() {
@@ -59,6 +61,9 @@ export default {
         document.body.appendChild(documentLinkElement);
         documentLinkElement.click();
       });
+    },
+    editBook(bookId) {
+      router.push({ path: 'edit/' + bookId })
     },
     deleteBook(bookId) {
       axios.delete("/api/book/" + bookId).then(() => {
