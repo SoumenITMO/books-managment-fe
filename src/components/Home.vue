@@ -7,6 +7,12 @@
         name="file"
         @change="dataFileUpload"
     />
+    <input type="text" v-model="isbn" placeholder="ISBN"/>
+    <input type="text" v-model="author" placeholder="Author"/>
+    <input type="text" v-model="title" placeholder="Title"/>
+    <button v-on:click="searchBooks"> Search </button>
+    <button v-on:click="clearSearch"> Rest </button>
+
     <div v-for="item in items" :key="item.fileName">
       <h2 v-if="item.books.length > 0"> {{ item.fileName }} <button v-on:click="downloadDataFile(item.fileName)"> Download </button></h2>
       <table class="table" v-if="item.books.length > 0">
@@ -41,7 +47,10 @@ export default {
   name: 'HomePage',
   data() {
     return {
-      items: []
+      items: [],
+      isbn: null,
+      author: null,
+      title: null
     }
   },
   mounted() {
@@ -80,6 +89,18 @@ export default {
       let request = new XMLHttpRequest();
       request.open("POST", "/uploadFile");
       request.send(formData);
+    },
+    searchBooks() {
+      axios.get("/api/book/search?author=" + this.author + "&title=" + this.title + "&isbn=" + this.isbn).then((response) => {
+        this.items = [];
+        this.items.push.apply(this.items, response.data);
+      }).catch((err) => { this.$toasted.error(err.response.data.message, {duration: 5000}); });
+    },
+    clearSearch() {
+      this.author = null;
+      this.isbn = null;
+      this.title = null;
+      this.fetchBooks();
     }
   }
 }
